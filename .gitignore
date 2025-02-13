@@ -34,3 +34,4 @@ build/
 *.log
 *.class
 .idea/
+src/main/resources/application.properties
