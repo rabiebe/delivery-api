@@ -1,2 +1,2 @@
-# delivery-api
+# delivery-management-system
 kata test
