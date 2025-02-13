@@ -68,10 +68,7 @@ A backend service for managing deliveries and time slots using Java 21 and Sprin
 
 ---
 
-## 📄 To-Do List
-- [x] Connect application to PostgreSQL
-- [ ] Create project structure with hexagonal architecture
----
-
-## 🤝 Contributing
-Pull requests are welcome. Please open an issue first to discuss what you would like to change.
+1. Clone the repository.
+2. Checkout the `feature/hexagonal-architecture` branch.
+3. Set up PostgreSQL and configure `application.properties`.
+4. Run `mvn spring-boot:run`.
