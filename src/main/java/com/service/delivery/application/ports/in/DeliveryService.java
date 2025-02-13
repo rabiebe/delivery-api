@@ -1,4 +1,5 @@
 package com.service.delivery.application.ports.in;
 
-public class DeliveryService {
+public interface DeliveryService {
+
 }
