@@ -1,82 +1,69 @@
 # Delivery Management System
 
-A backend service for managing deliveries and time slots using Java 21 and Spring Boot 3.2.
+> 📄 **This README.md is specific to the `feature/hexagonal-architecture` branch.**
+> The main branch will contain the full combined documentation of all branches.
 
----
 
-## 📦 Features
-- Delivery mode selection (DRIVE, DELIVERY, DELIVERY_TODAY, DELIVERY_ASAP)
-- Time slot booking system with availability checks
-- Secure API with JWT authentication
-- Event-driven architecture with Kafka
-- PostgreSQL integration for data persistence
-- Docker and Kubernetes support (planned)
-- Redis caching (planned)
+A backend service for managing deliveries, time slots, and bookings using Java 21 and Spring Boot 3.2.
 
----
+## `feature/hexagonal-architecture` Branch Documentation
 
-## 🚀 Getting Started
+### **Description**
+This branch implements a complete hexagonal architecture for the Delivery project, including:
+- Domain models and business logic.
+- Application ports (in/out) and service implementations.
+- Infrastructure layer with JPA entities and repositories.
+- Web layer with DTOs, mappers (MapStruct), and REST controllers.
 
-### Prerequisites
-- Java 21
-- Maven 3+
-- PostgreSQL installed locally or via Docker
+### **Project Structure**
+```
+src
+└── main
+    └── java
+        └── com.delivery
+            ├── application
+            │   ├── ports
+            │   │   ├── in       // Interfaces for use cases
+            │   │   └── out      // Interfaces for external adapters
+            │   └── service      // Business services implementations
+            │
+            ├── domain
+            │   ├── model        // Business entities (Delivery, TimeSlot, Booking)
+            │   ├── exception    // Domain-specific exceptions
+            │   └── service      // Domain services
+            │
+            ├── infrastructure
+            │   ├── config       // Spring Boot configurations
+            │   ├── entity       // JPA entities
+            │   ├── repository   // JPA repositories
+            │   ├── messaging    // Kafka adapters
+            │   └── external     // External services integrations
+            │
+            └── web
+                ├── controller   // REST controllers
+                ├── dto
+                │   ├── request  // Request DTOs
+                │   └── response // Response DTOs
+                └── mapper       // MapStruct mappers
+```
+- **domain**: Business entities (Delivery, TimeSlot, Booking).
+- **application**: Ports and services.
+- **infrastructure**: Entities, repositories, and configurations.
+- **web**: DTOs, mappers, and controllers.
 
-### Installation Steps
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/delivery-management-system.git
-   ```
-2. **Navigate to the project directory**:
-   ```bash
-   cd delivery-management-system
-   ```
-3. **Create a PostgreSQL database** named `deliverydb` and configure your credentials.
-4. **Run the application**:
-   ```bash
-   mvn spring-boot:run
-   ```
-5. **Access the API** at:
-   ```bash
-   http://localhost:8080
-   ```
+### **How to Run the Project**
 
----
-
-## 🔧 Technologies Used
-- **Java 21** – For modern Java features and performance.
-- **Spring Boot 3.2** – For rapid development and microservices architecture.
-- **Spring Data JPA** – For database interactions.
-- **PostgreSQL** – For data persistence.
-- **Spring Security (JWT)** – For securing the API.
-- **Apache Kafka** – For event-driven design.
-- **Docker & Kubernetes** – For containerization and orchestration (planned).
-
----
-
-## 🌿 Branch Documentation
-
-### `feature/postgresql-setup`
-- **Description**: Configured PostgreSQL as the main database and disabled Redis for now.
-- **Changes**:
-    - Added PostgreSQL configuration in `application.properties`.
-    - Disabled Redis cache to focus on PostgreSQL connection.
-- **How to use**:
-    1. Create a PostgreSQL database named `deliverydb`.
-    2. Update `application.properties` with your PostgreSQL credentials.
-    3. Run the project using `mvn spring-boot:run`.
-
----
-
-## 📄 To-Do List
-- [x] Connect application to PostgreSQL
-- [ ] Implement time slot management
-- [ ] Add JWT authentication
-- [ ] Integrate Kafka for event-driven architecture
+### **To-Do List**
+- [x] Implement hexagonal architecture structure
+- [x] Add domain models and services
+- [x] Create DTOs and mappers
+- [x] Implement REST controllers
+- [x] Add JPA entities and repositories
+- [ ] Finalize service logic and integrate repositories
+- [ ] Add tests and documentation
 - [ ] Dockerize the application
-- [ ] Add Redis caching
 
----
-
-## 🤝 Contributing
-Pull requests are welcome. Please open an issue first to discuss what you would like to change.
+1. Clone the repository.
+2. Checkout the `feature/hexagonal-architecture` branch.
+3. Set up PostgreSQL and configure `application.properties`.
+4. Run `mvn spring-boot:run`.
