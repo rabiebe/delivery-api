@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DeliveryController {
 
-    private final DeliveryService deliveryService;
+    //private final DeliveryService deliveryService;
 
     @PostMapping
     public ResponseEntity<Void> createDelivery(@RequestBody DeliveryRequest request) {

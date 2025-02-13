@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TimeSlotController {
 
-    private final TimeSlotService timeSlotService;
+    //private final TimeSlotService timeSlotService;
 
     @PostMapping
     public ResponseEntity<Void> createTimeSlot(@RequestBody TimeSlotRequest request) {

@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class BookingController {
 
-    private final BookingService bookingService;
+    //private final BookingService bookingService;
 
     @PostMapping
     public ResponseEntity<Void> createBooking(@RequestBody BookingRequest request) {

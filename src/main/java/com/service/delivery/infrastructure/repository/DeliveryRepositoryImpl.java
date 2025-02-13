@@ -7,19 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class DeliveryRepositoryImpl implements DeliveryRepository {
-    @Override
-    public Delivery save(Delivery delivery) {
-        return null;
-    }
+public class DeliveryRepositoryImpl  {
 
-    @Override
-    public Optional<Delivery> findById(UUID id) {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<Delivery> findAll() {
-        return List.of();
-    }
 }
