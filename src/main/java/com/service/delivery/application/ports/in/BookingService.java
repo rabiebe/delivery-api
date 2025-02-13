@@ -1,4 +1,4 @@
 package com.service.delivery.application.ports.in;
 
-public class BookingService {
+public interface BookingService {
 }
