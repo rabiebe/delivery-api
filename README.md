@@ -70,12 +70,7 @@ A backend service for managing deliveries and time slots using Java 21 and Sprin
 
 ## 📄 To-Do List
 - [x] Connect application to PostgreSQL
-- [ ] Implement time slot management
-- [ ] Add JWT authentication
-- [ ] Integrate Kafka for event-driven architecture
-- [ ] Dockerize the application
-- [ ] Add Redis caching
-
+- [ ] Create project structure with hexagonal architecture
 ---
 
 ## 🤝 Contributing
