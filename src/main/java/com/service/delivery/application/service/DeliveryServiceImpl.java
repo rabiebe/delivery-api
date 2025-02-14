@@ -7,29 +7,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-//@Service
-//@RequiredArgsConstructor
 public class DeliveryServiceImpl implements DeliveryService {
 
-    // private final DeliveryRepository deliveryRepository;
+    private final DeliveryRepository deliveryRepository;
 
     @Override
     public Delivery createDelivery(Delivery delivery) {
-        return null; // TODO: Implement once repository is ready
+        return deliveryRepository.save(delivery);
     }
 
     @Override
-    public Delivery getDeliveryById(UUID id) {
-        return null;
+    public Optional<Delivery> getDeliveryById(UUID id) {
+        return deliveryRepository.findById(id);
     }
 
     @Override
     public List<Delivery> getAllDeliveries() {
-        return List.of();
+        return deliveryRepository.findAll();
     }
 }
 
