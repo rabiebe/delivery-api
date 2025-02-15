@@ -7,14 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
 public class TimeSlotServiceImplTest {
 
     @Mock
@@ -30,11 +28,36 @@ public class TimeSlotServiceImplTest {
 
     @Test
     void testCreateTimeSlot() {
+        // Arrange
         TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), null, null, false);
         when(timeSlotRepository.save(timeSlot)).thenReturn(timeSlot);
 
+        // Act
         TimeSlot result = timeSlotService.createTimeSlot(timeSlot);
+
+        // Assert
         assertNotNull(result);
         assertEquals(timeSlot, result);
+
+        // Verify interactions
+        verify(timeSlotRepository, times(1)).save(timeSlot);
+    }
+
+    @Test
+    void testFindTimeSlotById() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+        TimeSlot timeSlot = new TimeSlot(id, null, null, false);
+        when(timeSlotRepository.findById(id)).thenReturn(java.util.Optional.of(timeSlot));
+
+        // Act
+        TimeSlot result = timeSlotService.getTimeSlotById(id).orElse(null);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+
+        // Verify interactions
+        verify(timeSlotRepository, times(1)).findById(id);
     }
 }
