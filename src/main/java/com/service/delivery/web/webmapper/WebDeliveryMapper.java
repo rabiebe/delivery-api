@@ -1,4 +1,4 @@
-package com.service.delivery.web.mapper;
+package com.service.delivery.web.webmapper;
 
 import com.service.delivery.domain.model.Delivery;
 import com.service.delivery.web.dto.request.DeliveryRequest;

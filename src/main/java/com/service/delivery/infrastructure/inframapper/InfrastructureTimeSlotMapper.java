@@ -1,4 +1,4 @@
-package com.service.delivery.infrastructure.mapper;
+package com.service.delivery.infrastructure.inframapper;
 
 import com.service.delivery.domain.model.TimeSlot;
 import com.service.delivery.infrastructure.entity.TimeSlotEntity;

@@ -3,7 +3,7 @@ package com.service.delivery.infrastructure.repository;
 import com.service.delivery.application.ports.out.BookingRepository;
 import com.service.delivery.domain.model.Booking;
 import com.service.delivery.infrastructure.entity.BookingEntity;
-import com.service.delivery.infrastructure.mapper.BookingMapper;
+import com.service.delivery.infrastructure.inframapper.InfrastructureBookingMapper;
 import com.service.delivery.infrastructure.repository.jpa.JpaBookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,21 +18,21 @@ import java.util.UUID;
 public class BookingRepositoryImpl implements BookingRepository {
 
     private final JpaBookingRepository jpaBookingRepository;
-    private final BookingMapper bookingMapper;
+    private final InfrastructureBookingMapper infrastructureBookingMapper;
 
     @Override
     public Booking save(Booking booking) {
-        BookingEntity entity = bookingMapper.toEntity(booking);
-        return bookingMapper.toDomain(jpaBookingRepository.save(entity));
+        BookingEntity entity = infrastructureBookingMapper.toEntity(booking);
+        return infrastructureBookingMapper.toDomain(jpaBookingRepository.save(entity));
     }
 
     @Override
     public Optional<Booking> findById(UUID id) {
-        return jpaBookingRepository.findById(id).map(bookingMapper::toDomain);
+        return jpaBookingRepository.findById(id).map(infrastructureBookingMapper::toDomain);
     }
 
     @Override
     public List<Booking> findAll() {
-        return jpaBookingRepository.findAll().stream().map(bookingMapper::toDomain).toList();
+        return jpaBookingRepository.findAll().stream().map(infrastructureBookingMapper::toDomain).toList();
     }
 }
