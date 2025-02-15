@@ -7,14 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
 public class BookingServiceImplTest {
 
     @Mock
@@ -30,11 +28,18 @@ public class BookingServiceImplTest {
 
     @Test
     void testCreateBooking() {
+        // Arrange
         Booking booking = new Booking(UUID.randomUUID(), null, null, null);
         when(bookingRepository.save(booking)).thenReturn(booking);
 
+        // Act
         Booking result = bookingService.createBooking(booking);
+
+        // Assert
         assertNotNull(result);
         assertEquals(booking, result);
+
+        // Verify interactions
+        verify(bookingRepository, times(1)).save(booking);
     }
 }

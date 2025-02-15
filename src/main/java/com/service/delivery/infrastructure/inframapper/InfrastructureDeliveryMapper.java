@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface DeliveryMapper {
-    DeliveryMapper INSTANCE = Mappers.getMapper(DeliveryMapper.class);
+public interface InfrastructureDeliveryMapper {
+    InfrastructureDeliveryMapper INSTANCE = Mappers.getMapper(InfrastructureDeliveryMapper.class);
 
     Delivery toDomain(DeliveryEntity entity);
 

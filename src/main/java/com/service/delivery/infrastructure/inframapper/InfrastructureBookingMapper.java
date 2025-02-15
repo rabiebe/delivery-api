@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface BookingMapper {
-    BookingMapper INSTANCE = Mappers.getMapper(BookingMapper.class);
+public interface InfrastructureBookingMapper {
+    InfrastructureBookingMapper INSTANCE = Mappers.getMapper(InfrastructureBookingMapper.class);
     Booking toDomain(BookingEntity entity);
     BookingEntity toEntity(Booking booking);
 }

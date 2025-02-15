@@ -7,8 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface TimeSlotMapper {
-    TimeSlotMapper INSTANCE = Mappers.getMapper(TimeSlotMapper.class);
+public interface WebTimeSlotMapper {
+    WebTimeSlotMapper INSTANCE = Mappers.getMapper(WebTimeSlotMapper.class);
 
     TimeSlot toDomain(TimeSlotRequest request);
 
