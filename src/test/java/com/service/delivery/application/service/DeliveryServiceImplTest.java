@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,7 +15,6 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
 public class DeliveryServiceImplTest {
 
     @Mock
@@ -32,23 +30,36 @@ public class DeliveryServiceImplTest {
 
     @Test
     void testCreateDelivery() {
+        // Arrange
         Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, null);
         when(deliveryRepository.save(delivery)).thenReturn(delivery);
 
+        // Act
         Delivery result = deliveryService.createDelivery(delivery);
+
+        // Assert
         assertNotNull(result);
         assertEquals(delivery, result);
+
+        // Verify interactions
+        verify(deliveryRepository, times(1)).save(delivery);
     }
 
     @Test
     void testGetDeliveryById() {
+        // Arrange
         UUID id = UUID.randomUUID();
         Delivery delivery = new Delivery(id, DeliveryMode.DRIVE, null);
         when(deliveryRepository.findById(id)).thenReturn(Optional.of(delivery));
 
+        // Act
         Optional<Delivery> result = deliveryService.getDeliveryById(id);
+
+        // Assert
         assertTrue(result.isPresent());
         assertEquals(delivery, result.get());
+
+        // Verify interactions
+        verify(deliveryRepository, times(1)).findById(id);
     }
 }
-
