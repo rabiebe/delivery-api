@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
@@ -59,5 +61,36 @@ public class TimeSlotServiceImplTest {
 
         // Verify interactions
         verify(timeSlotRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void testGetAllTimeSlots(){
+        //Arrange
+        TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), null, null, false);
+        when(timeSlotRepository.findAll()).thenReturn(List.of(timeSlot));
+
+        //Act
+        List<TimeSlot> result = timeSlotService.getAllTimeSlots();
+
+        //Assert
+        assertNotNull(result);
+        assertEquals(timeSlot, result.getFirst());
+        verify(timeSlotRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testIsTimeSlotAvailable() {
+        //Arrange
+        TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), null, null, false);
+        when(timeSlotRepository.findById(timeSlot.getId())).thenReturn(Optional.of(timeSlot));
+
+        //Act
+        boolean result = timeSlotService.isTimeSlotAvailable(timeSlot.getId());
+
+        //Assert
+        assertTrue(result);
+
+        //Verify interactions
+        verify(timeSlotRepository, times(1)).findById(timeSlot.getId());
     }
 }

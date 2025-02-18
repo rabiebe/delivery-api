@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -79,9 +78,8 @@ public class DeliveryServiceImplTest {
         //Asset
         assertNotNull(result);
         assertEquals(deliveries, result);
-        assertFalse(deliveries.isEmpty());
-
-        //Verify interations
+        assertEquals(delivery, result.getFirst());
+        //Verify interactions
         verify(deliveryRepository, times(1)).findAll();
     }
 }

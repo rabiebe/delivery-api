@@ -31,6 +31,6 @@ public class TimeSlotServiceImpl implements TimeSlotService {
 
     @Override
     public boolean isTimeSlotAvailable(UUID id) {
-        return false;
+        return timeSlotRepository.findById(id).isPresent();
     }
 }
