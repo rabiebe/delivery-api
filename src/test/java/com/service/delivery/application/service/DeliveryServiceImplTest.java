@@ -5,11 +5,11 @@ import com.service.delivery.application.exception.NullDeliveryException;
 import com.service.delivery.application.ports.out.DeliveryRepository;
 import com.service.delivery.domain.model.Delivery;
 import com.service.delivery.domain.model.DeliveryMode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 public class DeliveryServiceImplTest {
 
     @Mock
@@ -27,13 +28,9 @@ public class DeliveryServiceImplTest {
     @InjectMocks
     private DeliveryServiceImpl deliveryService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
-    void testCreateDelivery() {
+    void testCreateDelivery_ShouldReturnSavedDelivery() {
         // Arrange
         Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, ZonedDateTime.now());
         when(deliveryRepository.save(delivery)).thenReturn(delivery);
@@ -50,20 +47,27 @@ public class DeliveryServiceImplTest {
     }
 
     @Test
-    void testCreateNullDelivery() {
+    void testCreateDelivery_ShouldThrowNullDeliveryException_WhenDeliveryIsNull() {
         assertThrows(NullDeliveryException.class, () -> deliveryService.createDelivery(null));
         verify(deliveryRepository, times(0)).save(any());
     }
 
     @Test
-    void testCreateDeliveryWithNull() {
+    void testCreateDelivery_ShouldThrowInvalidDeliveryException_WhenModeIsNull() {
         Delivery delivery = new Delivery(UUID.randomUUID(), null, ZonedDateTime.now());
         assertThrows(InvalidDeliveryException.class, () -> deliveryService.createDelivery(delivery));
         verify(deliveryRepository, times(0)).save(delivery);
     }
 
     @Test
-    void testGetDeliveryById() {
+    void testCreateDelivery_ShouldThrowInvalidDeliveryException_WhenDateIsNull() {
+        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DELIVERY, null);
+        assertThrows(InvalidDeliveryException.class, () -> deliveryService.createDelivery(delivery));
+        verify(deliveryRepository, times(0)).save(delivery);
+    }
+
+    @Test
+    void testGetDeliveryById_ShouldReturnDelivery_WhenDeliveryExists() {
         // Arrange
         UUID id = UUID.randomUUID();
         Delivery delivery = new Delivery(id, DeliveryMode.DRIVE, null);
@@ -81,7 +85,24 @@ public class DeliveryServiceImplTest {
     }
 
     @Test
-    void testGetAllDeliveries(){
+    void testGetDeliveryById_ShouldThrowNullDeliveryException_WhenIdIsNull() {
+        assertThrows(NullDeliveryException.class, () -> deliveryService.getDeliveryById(null));
+        verify(deliveryRepository, times(0)).findById(any());
+    }
+
+    @Test
+    void testGetDeliveryById_ShouldReturnEmptyOptional_WhenDeliveryNotFound() {
+        UUID id = UUID.randomUUID();
+        when(deliveryRepository.findById(id)).thenReturn(Optional.empty());
+
+        Optional<Delivery> result = deliveryService.getDeliveryById(id);
+
+        assertTrue(result.isEmpty());
+        verify(deliveryRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void testGetAllDeliveries_ShouldReturnAllDeliveries(){
         //Arrange
         Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, null);
         List<Delivery> deliveries = List.of(delivery);
