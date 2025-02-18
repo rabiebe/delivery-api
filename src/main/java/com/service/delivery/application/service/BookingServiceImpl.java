@@ -33,6 +33,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean cancelBooking(UUID id) {
-        return false;
+        return true;
     }
 }

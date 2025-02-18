@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
@@ -41,5 +43,30 @@ public class BookingServiceImplTest {
 
         // Verify interactions
         verify(bookingRepository, times(1)).save(booking);
+    }
+
+    @Test
+    void testGetBookingById() {
+        Booking booking = new Booking(UUID.randomUUID(), null, null, null);
+        when(bookingRepository.findById(booking.getId())).thenReturn(Optional.of(booking));
+
+        Optional<Booking> result = bookingService.getBookingById(booking.getId());
+
+        assertTrue(result.isPresent());
+        assertEquals(booking, result.get());
+
+        verify(bookingRepository, times(1)).findById(booking.getId());
+    }
+
+    @Test
+    void testGetAllBookings() {
+        Booking booking = new Booking(UUID.randomUUID(), null, null, null);
+        List<Booking> bookings = List.of(booking);
+        when(bookingRepository.findAll()).thenReturn(bookings);
+
+        List<Booking> result = bookingService.getAllBookings();
+        assertNotNull(result);
+        assertEquals(booking, result.getFirst());
+        verify(bookingRepository, times(1)).findAll();
     }
 }
