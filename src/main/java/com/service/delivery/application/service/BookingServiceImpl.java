@@ -1,5 +1,7 @@
 package com.service.delivery.application.service;
 
+import com.service.delivery.application.exception.booking.InvalidBookingException;
+import com.service.delivery.application.exception.booking.NullBookingException;
 import com.service.delivery.application.ports.in.BookingService;
 import com.service.delivery.application.ports.out.BookingRepository;
 import com.service.delivery.domain.model.Booking;
@@ -18,11 +20,20 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking createBooking(Booking booking) {
+        if(booking == null) {
+            throw new NullBookingException("Booking is null");
+        }
+        if(booking.getDate() == null) {
+            throw new InvalidBookingException("Date cannot be null");
+        }
         return bookingRepository.save(booking);
     }
 
     @Override
     public Optional<Booking> getBookingById(UUID id) {
+        if (id == null) {
+            throw new NullBookingException("Id cannot be null");
+        }
         return bookingRepository.findById(id);
     }
 
@@ -33,6 +44,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public boolean cancelBooking(UUID id) {
-        return true;
+        if (id == null) {
+            throw new NullBookingException("Id cannot be null");
+        }
+        return bookingRepository.deleteById(id);
     }
 }

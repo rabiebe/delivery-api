@@ -32,6 +32,16 @@ public class BookingRepositoryImpl implements BookingRepository {
     }
 
     @Override
+    public boolean deleteById(UUID id) {
+        if (jpaBookingRepository.existsById(id)) {
+            jpaBookingRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
     public List<Booking> findAll() {
         return jpaBookingRepository.findAll().stream().map(infrastructureBookingMapper::toDomain).toList();
     }

@@ -1,6 +1,7 @@
 package com.service.delivery.infrastructure.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,13 @@ public class BookingEntity {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "delivery_id")
+    @JoinColumn(name = "delivery_id", nullable = false)
     private DeliveryEntity delivery;
 
     @ManyToOne
-    @JoinColumn(name = "time_slot_id")
+    @JoinColumn(name = "time_slot_id", nullable = false)
     private TimeSlotEntity timeSlot;
 
+    @NotNull
     private ZonedDateTime bookingDate;
 }

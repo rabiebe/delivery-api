@@ -11,5 +11,6 @@ public interface BookingRepository  {
 
     Booking save(Booking booking);
     Optional<Booking> findById(UUID id);
+    boolean deleteById(UUID id);
     List<Booking> findAll();
 }

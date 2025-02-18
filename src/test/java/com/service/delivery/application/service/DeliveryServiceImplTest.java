@@ -32,7 +32,7 @@ public class DeliveryServiceImplTest {
     @Test
     void testCreateDelivery_ShouldReturnSavedDelivery() {
         // Arrange
-        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, ZonedDateTime.now());
+        Delivery delivery = createValidDelivery();
         when(deliveryRepository.save(delivery)).thenReturn(delivery);
 
         // Act
@@ -70,7 +70,7 @@ public class DeliveryServiceImplTest {
     void testGetDeliveryById_ShouldReturnDelivery_WhenDeliveryExists() {
         // Arrange
         UUID id = UUID.randomUUID();
-        Delivery delivery = new Delivery(id, DeliveryMode.DRIVE, null);
+        Delivery delivery = createValidDelivery();
         when(deliveryRepository.findById(id)).thenReturn(Optional.of(delivery));
 
         // Act
@@ -104,7 +104,7 @@ public class DeliveryServiceImplTest {
     @Test
     void testGetAllDeliveries_ShouldReturnAllDeliveries(){
         //Arrange
-        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, null);
+        Delivery delivery = createValidDelivery();
         List<Delivery> deliveries = List.of(delivery);
 
         when(deliveryRepository.findAll()).thenReturn(deliveries);
@@ -118,5 +118,9 @@ public class DeliveryServiceImplTest {
         assertEquals(delivery, result.getFirst());
         //Verify interactions
         verify(deliveryRepository, times(1)).findAll();
+    }
+
+    private Delivery createValidDelivery() {
+        return new Delivery(UUID.randomUUID(), DeliveryMode.DELIVERY, ZonedDateTime.now());
     }
 }
