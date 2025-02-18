@@ -2,6 +2,7 @@ package com.service.delivery.infrastructure.entity;
 
 import com.service.delivery.domain.model.DeliveryMode;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,6 @@ public class DeliveryEntity {
     @Enumerated(EnumType.STRING)
     private DeliveryMode mode;
 
+    @NotNull
     private ZonedDateTime deliveryDate;
 }

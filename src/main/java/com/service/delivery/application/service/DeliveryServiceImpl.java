@@ -18,6 +18,9 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public Delivery createDelivery(Delivery delivery) {
+        if (delivery == null) {return null;}
+
+
         return deliveryRepository.save(delivery);
     }
 
