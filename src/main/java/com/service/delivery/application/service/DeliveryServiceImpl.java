@@ -1,5 +1,7 @@
 package com.service.delivery.application.service;
 
+import com.service.delivery.application.exception.InvalidDeliveryException;
+import com.service.delivery.application.exception.NullDeliveryException;
 import com.service.delivery.application.ports.in.DeliveryService;
 import com.service.delivery.application.ports.out.DeliveryRepository;
 import com.service.delivery.domain.model.Delivery;
@@ -18,26 +20,24 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public Delivery createDelivery(Delivery delivery) {
-        try{
-            if (delivery == null) {throw new Exception("Delivery cannot be null");}
-            if(delivery.getMode() == null) {throw new Exception("Mode cannot be null");}
-            if(delivery.getDate() == null) {throw new Exception("Date cannot be null");}
-            return deliveryRepository.save(delivery);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (delivery == null) {
+            throw new NullDeliveryException("Delivery cannot be null");
         }
+        if (delivery.getMode() == null) {
+            throw new InvalidDeliveryException("Mode cannot be null");
+        }
+        if (delivery.getDate() == null) {
+            throw new InvalidDeliveryException("Date cannot be null");
+        }
+        return deliveryRepository.save(delivery);
     }
 
     @Override
     public Optional<Delivery> getDeliveryById(UUID id) {
-        try {
-            if (id == null) {throw new Exception("ID cannot be null");}
-            return deliveryRepository.findById(id);
-        }catch (Exception e) {
-            throw new RuntimeException(e);
+        if (id == null) {
+            throw new NullDeliveryException("ID cannot be null");
         }
-
-
+        return deliveryRepository.findById(id);
     }
 
     @Override

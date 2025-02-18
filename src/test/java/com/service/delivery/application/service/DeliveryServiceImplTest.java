@@ -1,5 +1,6 @@
 package com.service.delivery.application.service;
 
+import com.service.delivery.application.exception.InvalidDeliveryException;
 import com.service.delivery.application.ports.out.DeliveryRepository;
 import com.service.delivery.domain.model.Delivery;
 import com.service.delivery.domain.model.DeliveryMode;
@@ -44,6 +45,14 @@ public class DeliveryServiceImplTest {
 
         // Verify interactions
         verify(deliveryRepository, times(1)).save(delivery);
+    }
+
+    @Test
+    void testCreateDeliveryWithNull() {
+        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, null);
+        when(deliveryRepository.save(delivery)).thenReturn(delivery);
+        assertThrows(InvalidDeliveryException.class, () -> deliveryService.createDelivery(delivery));
+        verify(deliveryRepository, times(0)).save(delivery);
     }
 
     @Test
