@@ -18,15 +18,26 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public Delivery createDelivery(Delivery delivery) {
-        if (delivery == null) {return null;}
-
-
-        return deliveryRepository.save(delivery);
+        try{
+            if (delivery == null) {throw new Exception("Delivery cannot be null");}
+            if(delivery.getMode() == null) {throw new Exception("Mode cannot be null");}
+            if(delivery.getDate() == null) {throw new Exception("Date cannot be null");}
+            return deliveryRepository.save(delivery);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Optional<Delivery> getDeliveryById(UUID id) {
-        return deliveryRepository.findById(id);
+        try {
+            if (id == null) {throw new Exception("ID cannot be null");}
+            return deliveryRepository.findById(id);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     @Override
