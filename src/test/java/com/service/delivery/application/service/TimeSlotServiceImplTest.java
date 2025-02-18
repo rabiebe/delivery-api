@@ -1,13 +1,16 @@
 package com.service.delivery.application.service;
 
+import com.service.delivery.application.exception.timeslot.InvalidTimeSlotException;
+import com.service.delivery.application.exception.timeslot.NullTimeSlotException;
 import com.service.delivery.application.ports.out.TimeSlotRepository;
 import com.service.delivery.domain.model.TimeSlot;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +18,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 public class TimeSlotServiceImplTest {
 
     @Mock
@@ -23,15 +27,10 @@ public class TimeSlotServiceImplTest {
     @InjectMocks
     private TimeSlotServiceImpl timeSlotService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
-    void testCreateTimeSlot() {
+    void createTimeSlot_shouldReturnSavedTimeSlot_whenInputIsValid() {
         // Arrange
-        TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), null, null, false);
+        TimeSlot timeSlot = createValidTimeSlot();
         when(timeSlotRepository.save(timeSlot)).thenReturn(timeSlot);
 
         // Act
@@ -40,57 +39,126 @@ public class TimeSlotServiceImplTest {
         // Assert
         assertNotNull(result);
         assertEquals(timeSlot, result);
-
-        // Verify interactions
         verify(timeSlotRepository, times(1)).save(timeSlot);
     }
 
     @Test
-    void testFindTimeSlotById() {
+    void createTimeSlot_shouldThrowNullTimeSlotException_whenTimeSlotIsNull() {
+        // Act & Assert
+        assertThrows(NullTimeSlotException.class, () -> timeSlotService.createTimeSlot(null));
+        verify(timeSlotRepository, never()).save(any());
+    }
+
+    @Test
+    void createTimeSlot_shouldThrowInvalidTimeSlotException_whenStartTimeIsNull() {
+        // Arrange
+        TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), null, ZonedDateTime.now().plusHours(1), true);
+
+        // Act & Assert
+        assertThrows(InvalidTimeSlotException.class, () -> timeSlotService.createTimeSlot(timeSlot));
+        verify(timeSlotRepository, never()).save(timeSlot);
+    }
+
+    @Test
+    void createTimeSlot_shouldThrowInvalidTimeSlotException_whenEndTimeIsNull() {
+        // Arrange
+        TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), ZonedDateTime.now(), null, true);
+
+        // Act & Assert
+        assertThrows(InvalidTimeSlotException.class, () -> timeSlotService.createTimeSlot(timeSlot));
+        verify(timeSlotRepository, never()).save(timeSlot);
+    }
+
+    @Test
+    void getTimeSlotById_shouldReturnTimeSlot_whenTimeSlotExists() {
         // Arrange
         UUID id = UUID.randomUUID();
-        TimeSlot timeSlot = new TimeSlot(id, null, null, false);
-        when(timeSlotRepository.findById(id)).thenReturn(java.util.Optional.of(timeSlot));
+        TimeSlot timeSlot = createValidTimeSlot();
+        when(timeSlotRepository.findById(id)).thenReturn(Optional.of(timeSlot));
 
         // Act
-        TimeSlot result = timeSlotService.getTimeSlotById(id).orElse(null);
+        Optional<TimeSlot> result = timeSlotService.getTimeSlotById(id);
 
         // Assert
-        assertNotNull(result);
-        assertEquals(id, result.getId());
-
-        // Verify interactions
+        assertTrue(result.isPresent());
+        assertEquals(timeSlot, result.get());
         verify(timeSlotRepository, times(1)).findById(id);
     }
 
     @Test
-    void testGetAllTimeSlots(){
-        //Arrange
-        TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), null, null, false);
-        when(timeSlotRepository.findAll()).thenReturn(List.of(timeSlot));
+    void getTimeSlotById_shouldThrowNullTimeSlotException_whenIdIsNull() {
+        // Act & Assert
+        assertThrows(NullTimeSlotException.class, () -> timeSlotService.getTimeSlotById(null));
+        verify(timeSlotRepository, never()).findById(any());
+    }
 
-        //Act
+    @Test
+    void getTimeSlotById_shouldReturnEmptyOptional_whenTimeSlotDoesNotExist() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+        when(timeSlotRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act
+        Optional<TimeSlot> result = timeSlotService.getTimeSlotById(id);
+
+        // Assert
+        assertTrue(result.isEmpty());
+        verify(timeSlotRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void getAllTimeSlots_shouldReturnAllTimeSlots() {
+        // Arrange
+        TimeSlot timeSlot = createValidTimeSlot();
+        List<TimeSlot> timeSlots = List.of(timeSlot);
+        when(timeSlotRepository.findAll()).thenReturn(timeSlots);
+
+        // Act
         List<TimeSlot> result = timeSlotService.getAllTimeSlots();
 
-        //Assert
+        // Assert
         assertNotNull(result);
+        assertEquals(timeSlots, result);
         assertEquals(timeSlot, result.getFirst());
         verify(timeSlotRepository, times(1)).findAll();
     }
 
     @Test
-    void testIsTimeSlotAvailable() {
-        //Arrange
-        TimeSlot timeSlot = new TimeSlot(UUID.randomUUID(), null, null, false);
-        when(timeSlotRepository.findById(timeSlot.getId())).thenReturn(Optional.of(timeSlot));
+    void isTimeSlotAvailable_shouldReturnTrue_whenTimeSlotExists() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+        when(timeSlotRepository.findById(id)).thenReturn(Optional.of(createValidTimeSlot()));
 
-        //Act
-        boolean result = timeSlotService.isTimeSlotAvailable(timeSlot.getId());
+        // Act
+        boolean result = timeSlotService.isTimeSlotAvailable(id);
 
-        //Assert
+        // Assert
         assertTrue(result);
+        verify(timeSlotRepository, times(1)).findById(id);
+    }
 
-        //Verify interactions
-        verify(timeSlotRepository, times(1)).findById(timeSlot.getId());
+    @Test
+    void isTimeSlotAvailable_shouldReturnFalse_whenTimeSlotDoesNotExist() {
+        // Arrange
+        UUID id = UUID.randomUUID();
+        when(timeSlotRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Act
+        boolean result = timeSlotService.isTimeSlotAvailable(id);
+
+        // Assert
+        assertFalse(result);
+        verify(timeSlotRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void isTimeSlotAvailable_shouldThrowNullTimeSlotException_whenIdIsNull() {
+        // Act & Assert
+        assertThrows(NullTimeSlotException.class, () -> timeSlotService.isTimeSlotAvailable(null));
+        verify(timeSlotRepository, never()).findById(any());
+    }
+
+    private TimeSlot createValidTimeSlot() {
+        return new TimeSlot(UUID.randomUUID(), ZonedDateTime.now(), ZonedDateTime.now().plusHours(1), true);
     }
 }
