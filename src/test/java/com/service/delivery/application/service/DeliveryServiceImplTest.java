@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -61,5 +63,25 @@ public class DeliveryServiceImplTest {
 
         // Verify interactions
         verify(deliveryRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void testGetAllDeliveries(){
+        //Arrange
+        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, null);
+        List<Delivery> deliveries = List.of(delivery);
+
+        when(deliveryRepository.findAll()).thenReturn(deliveries);
+
+        //Act
+        List<Delivery> result = deliveryService.getAllDeliveries();
+
+        //Asset
+        assertNotNull(result);
+        assertEquals(deliveries, result);
+        assertFalse(deliveries.isEmpty());
+
+        //Verify interations
+        verify(deliveryRepository, times(1)).findAll();
     }
 }
