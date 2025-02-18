@@ -1,6 +1,7 @@
 package com.service.delivery.application.service;
 
 import com.service.delivery.application.exception.InvalidDeliveryException;
+import com.service.delivery.application.exception.NullDeliveryException;
 import com.service.delivery.application.ports.out.DeliveryRepository;
 import com.service.delivery.domain.model.Delivery;
 import com.service.delivery.domain.model.DeliveryMode;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +35,7 @@ public class DeliveryServiceImplTest {
     @Test
     void testCreateDelivery() {
         // Arrange
-        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, null);
+        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, ZonedDateTime.now());
         when(deliveryRepository.save(delivery)).thenReturn(delivery);
 
         // Act
@@ -48,9 +50,14 @@ public class DeliveryServiceImplTest {
     }
 
     @Test
+    void testCreateNullDelivery() {
+        assertThrows(NullDeliveryException.class, () -> deliveryService.createDelivery(null));
+        verify(deliveryRepository, times(0)).save(any());
+    }
+
+    @Test
     void testCreateDeliveryWithNull() {
-        Delivery delivery = new Delivery(UUID.randomUUID(), DeliveryMode.DRIVE, null);
-        when(deliveryRepository.save(delivery)).thenReturn(delivery);
+        Delivery delivery = new Delivery(UUID.randomUUID(), null, ZonedDateTime.now());
         assertThrows(InvalidDeliveryException.class, () -> deliveryService.createDelivery(delivery));
         verify(deliveryRepository, times(0)).save(delivery);
     }
