@@ -1,4 +1,4 @@
-package com.service.delivery.application.exception;
+package com.service.delivery.application.exception.delivery;
 
 public class InvalidDeliveryException extends RuntimeException {
     public InvalidDeliveryException(String message) {

@@ -1,4 +1,4 @@
-package com.service.delivery.application.exception;
+package com.service.delivery.application.exception.delivery;
 
 public class NullDeliveryException extends RuntimeException {
     public NullDeliveryException(String message) {

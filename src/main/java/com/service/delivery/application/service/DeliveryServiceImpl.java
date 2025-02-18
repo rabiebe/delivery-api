@@ -1,7 +1,7 @@
 package com.service.delivery.application.service;
 
-import com.service.delivery.application.exception.InvalidDeliveryException;
-import com.service.delivery.application.exception.NullDeliveryException;
+import com.service.delivery.application.exception.delivery.InvalidDeliveryException;
+import com.service.delivery.application.exception.delivery.NullDeliveryException;
 import com.service.delivery.application.ports.in.DeliveryService;
 import com.service.delivery.application.ports.out.DeliveryRepository;
 import com.service.delivery.domain.model.Delivery;
