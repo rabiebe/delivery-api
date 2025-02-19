@@ -3,8 +3,11 @@ package com.service.delivery.infrastructure.entity;
 import com.service.delivery.domain.model.DeliveryMode;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +20,8 @@ import java.util.UUID;
 public class DeliveryEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @UuidGenerator
+    @Column(updatable = false, nullable = false)
     private UUID id;
 
     @Enumerated(EnumType.STRING)
@@ -25,6 +29,18 @@ public class DeliveryEntity {
     private DeliveryMode mode;
 
     @Column(nullable = false)
-    private ZonedDateTime deliveryDate;
+    private Instant deliveryDate;
+
+    @Column(updatable = false, nullable = false)
+    @CreationTimestamp
+    private Instant createdAt;
+
+    @Column(nullable = false)
+    @UpdateTimestamp
+    private Instant updatedAt;
+
+
 }
+
+
 
