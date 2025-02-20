@@ -26,6 +26,13 @@ public class Delivery {
         this.mode = mode;
         this.date = date;
     }
+
+    public Delivery updateDate(ZonedDateTime newDate) {
+        if (newDate == null || newDate.isBefore(ZonedDateTime.now())) {
+            throw new InvalidDeliveryDateException("New delivery date must be in the future.");
+        }
+        return new Delivery(this.id, this.mode, newDate);
+    }
 }
 
 
