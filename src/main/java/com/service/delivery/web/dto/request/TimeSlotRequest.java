@@ -1,15 +1,15 @@
 package com.service.delivery.web.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.ZonedDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class TimeSlotRequest {
-    private ZonedDateTime startTime;
-    private ZonedDateTime endTime;
-}
+public record TimeSlotRequest(
+        @NotNull(message = "Start time is required")
+        ZonedDateTime startTime,
+
+        @NotNull(message = "End time is required")
+        @Future(message = "End time must be in the future")
+        ZonedDateTime endTime
+) {}
