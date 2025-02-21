@@ -1,10 +1,15 @@
 package com.service.delivery.web.controller;
 
 
+import com.service.delivery.application.exception.delivery.DeliveryNotFoundException;
 import com.service.delivery.application.ports.in.DeliveryService;
+import com.service.delivery.domain.model.Delivery;
 import com.service.delivery.web.dto.request.DeliveryRequest;
 import com.service.delivery.web.dto.response.DeliveryResponse;
+import com.service.delivery.web.webmapper.WebDeliveryMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,20 +21,30 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DeliveryController {
 
-    //private final DeliveryService deliveryService;
+    private final DeliveryService deliveryService;
+    private final WebDeliveryMapper deliveryMapper;
 
     @PostMapping
-    public ResponseEntity<Void> createDelivery(@RequestBody DeliveryRequest request) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<DeliveryResponse> createDelivery(@Valid @RequestBody DeliveryRequest request) {
+        Delivery delivery = deliveryMapper.toDomain(request);
+        Delivery createdDelivery = deliveryService.createDelivery(delivery);
+        return ResponseEntity.status(HttpStatus.CREATED).body(deliveryMapper.toResponse(createdDelivery));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DeliveryResponse> getDeliveryById(@PathVariable UUID id) {
-        return ResponseEntity.ok().build();
+        return deliveryService.getDeliveryById(id)
+                .map(deliveryMapper::toResponse)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new DeliveryNotFoundException("Delivery not found for ID: " + id));
     }
 
     @GetMapping
     public ResponseEntity<List<DeliveryResponse>> getAllDeliveries() {
-        return ResponseEntity.ok().build();
+        List<DeliveryResponse> deliveries = deliveryService.getAllDeliveries()
+                .stream()
+                .map(deliveryMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(deliveries);
     }
 }
