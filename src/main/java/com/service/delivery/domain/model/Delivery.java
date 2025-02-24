@@ -13,18 +13,18 @@ public class Delivery {
 
     private final UUID id;
     private final DeliveryMode mode;
-    private final ZonedDateTime date;
+    private final ZonedDateTime deliveryDate;
 
-    public Delivery(UUID id, DeliveryMode mode, ZonedDateTime date) {
+    public Delivery(UUID id, DeliveryMode mode, ZonedDateTime deliveryDate) {
         if (mode == null) {
             throw new InvalidDeliveryModeException("Delivery mode cannot be null.");
         }
-        if (date == null || date.isBefore(ZonedDateTime.now())) {
+        if (deliveryDate == null || deliveryDate.isBefore(ZonedDateTime.now())) {
             throw new InvalidDeliveryDateException("Delivery date must be in the future.");
         }
         this.id = id != null ? id : UUID.randomUUID();
         this.mode = mode;
-        this.date = date;
+        this.deliveryDate = deliveryDate;
     }
 
     public Delivery updateDate(ZonedDateTime newDate) {

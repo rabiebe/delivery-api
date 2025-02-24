@@ -26,7 +26,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (delivery.getMode() == null) {
             throw new InvalidDeliveryException("Mode cannot be null");
         }
-        if (delivery.getDate() == null) {
+        if (delivery.getDeliveryDate() == null) {
             throw new InvalidDeliveryException("Date cannot be null");
         }
         return deliveryRepository.save(delivery);

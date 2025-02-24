@@ -14,10 +14,11 @@ import java.util.UUID;
 @Table(name = "deliveries")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class DeliveryEntity {
+
 
     @Id
     @UuidGenerator
@@ -38,6 +39,14 @@ public class DeliveryEntity {
     @Column(nullable = false)
     @UpdateTimestamp
     private Instant updatedAt;
+
+
+
+    public DeliveryEntity(UUID id, DeliveryMode mode, Instant deliveryDate) {
+        this.id = id;
+        this.mode = mode;
+        this.deliveryDate = deliveryDate;
+    }
 
 
 }

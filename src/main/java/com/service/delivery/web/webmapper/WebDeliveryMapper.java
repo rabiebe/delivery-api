@@ -10,7 +10,12 @@ import org.mapstruct.factory.Mappers;
 public interface WebDeliveryMapper {
     WebDeliveryMapper INSTANCE = Mappers.getMapper(WebDeliveryMapper.class);
 
-    Delivery toDomain(DeliveryRequest request);
+    default Delivery toDomain(DeliveryRequest request) {
+        if (request == null) {
+            return null;
+        }
+        return new Delivery(null, request.mode(), request.deliveryDate());
+    }
 
     DeliveryResponse toResponse(Delivery delivery);
 }
