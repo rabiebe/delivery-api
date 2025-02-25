@@ -3,6 +3,7 @@ package com.service.delivery.web.controller;
 import com.service.delivery.application.exception.delivery.DeliveryNotFoundException;
 import com.service.delivery.application.exception.delivery.InvalidDeliveryException;
 import com.service.delivery.domain.exception.delivery.InvalidDeliveryDateException;
+import com.service.delivery.domain.exception.delivery.InvalidDeliveryModeException;
 import com.service.delivery.web.dto.response.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidDeliveryException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidDelivery(InvalidDeliveryException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidDeliveryModeException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidDeliveryMode(InvalidDeliveryModeException ex) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

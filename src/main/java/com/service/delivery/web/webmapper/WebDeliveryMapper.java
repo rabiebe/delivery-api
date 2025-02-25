@@ -1,6 +1,8 @@
 package com.service.delivery.web.webmapper;
 
+import com.service.delivery.domain.exception.delivery.InvalidDeliveryModeException;
 import com.service.delivery.domain.model.Delivery;
+import com.service.delivery.domain.model.DeliveryMode;
 import com.service.delivery.web.dto.request.DeliveryRequest;
 import com.service.delivery.web.dto.response.DeliveryResponse;
 import org.mapstruct.Mapper;
@@ -14,7 +16,16 @@ public interface WebDeliveryMapper {
         if (request == null) {
             return null;
         }
-        return new Delivery(null, request.mode(), request.deliveryDate());
+        // Convertir le mode String en Enum
+        DeliveryMode mode;
+        try {
+            mode = DeliveryMode.valueOf(request.mode().toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new InvalidDeliveryModeException("Invalid delivery mode: " + request.mode());
+        }
+
+
+        return new Delivery(null, mode, request.deliveryDate());
     }
 
     DeliveryResponse toResponse(Delivery delivery);
