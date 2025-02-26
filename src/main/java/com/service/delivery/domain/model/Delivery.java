@@ -15,21 +15,34 @@ public class Delivery {
     private final DeliveryMode mode;
     private final ZonedDateTime deliveryDate;
 
+    private static final int MAX_MONTHS_IN_FUTURE = 3;
+
     public Delivery(UUID id, DeliveryMode mode, ZonedDateTime deliveryDate) {
         if (mode == null) {
             throw new InvalidDeliveryModeException("Delivery mode cannot be null.");
         }
-        if (deliveryDate == null || deliveryDate.isBefore(ZonedDateTime.now())) {
-            throw new InvalidDeliveryDateException("Delivery date must be in the future.");
+        if (!isValidDeliveryDate(deliveryDate)) {
+            throw new InvalidDeliveryDateException(
+                    "Delivery date must be in the future and within " + MAX_MONTHS_IN_FUTURE + " months.");
         }
         this.id = id != null ? id : UUID.randomUUID();
         this.mode = mode;
         this.deliveryDate = deliveryDate;
     }
 
+    private static boolean isValidDeliveryDate(ZonedDateTime deliveryDate) {
+        if (deliveryDate == null) {
+            return false;
+        }
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime maxAllowedDate = now.plusMonths(MAX_MONTHS_IN_FUTURE);
+        return deliveryDate.isAfter(now) && deliveryDate.isBefore(maxAllowedDate);
+    }
+
     public Delivery updateDate(ZonedDateTime newDate) {
-        if (newDate == null || newDate.isBefore(ZonedDateTime.now())) {
-            throw new InvalidDeliveryDateException("New delivery date must be in the future.");
+        if (!isValidDeliveryDate(newDate)) {
+            throw new InvalidDeliveryDateException(
+                    "New delivery date must be in the future and within " + MAX_MONTHS_IN_FUTURE + " months.");
         }
         return new Delivery(this.id, this.mode, newDate);
     }

@@ -37,6 +37,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (delivery.getDeliveryDate() == null) {
             throw new InvalidDeliveryException("Date cannot be null");
         }
+
         return deliveryRepository.save(delivery);
     }
 
