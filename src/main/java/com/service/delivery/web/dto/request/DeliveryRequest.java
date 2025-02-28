@@ -1,9 +1,8 @@
 package com.service.delivery.web.dto.request;
 
-import jakarta.validation.constraints.Future;
+import com.service.delivery.web.validation.ValidZonedDateTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
 
 public record DeliveryRequest(
         @NotNull(message = "Delivery mode is required")
@@ -11,6 +10,6 @@ public record DeliveryRequest(
         String mode,
 
         @NotNull(message = "Delivery date is required")
-        @Future(message = "Delivery date must be in the future")
-        ZonedDateTime deliveryDate
+        @ValidZonedDateTime(message = "Invalid date format. Expected format: yyyy-MM-dd'T'HH:mm:ssXXX")
+        String deliveryDate
 ) {}

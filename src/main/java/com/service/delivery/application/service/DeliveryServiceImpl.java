@@ -1,5 +1,6 @@
 package com.service.delivery.application.service;
 
+import com.service.delivery.application.exception.delivery.DeliveryNotFoundException;
 import com.service.delivery.application.exception.delivery.InvalidDeliveryException;
 import com.service.delivery.application.exception.delivery.NullDeliveryException;
 import com.service.delivery.application.ports.in.DeliveryService;
@@ -46,7 +47,12 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (id == null) {
             throw new NullDeliveryException("ID cannot be null");
         }
-        return deliveryRepository.findById(id);
+
+        Optional<Delivery> delivery = deliveryRepository.findById(id);
+        if(delivery.isEmpty()){
+            throw new DeliveryNotFoundException("Delivery with ID " + id + " not found");
+        }
+        return delivery;
     }
 
     @Override
@@ -58,5 +64,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         return Arrays.stream(DeliveryMode.values())
                 .anyMatch(validMode -> validMode.name().equalsIgnoreCase(mode));
     }
+
 }
 

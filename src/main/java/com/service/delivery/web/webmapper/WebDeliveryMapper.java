@@ -8,6 +8,8 @@ import com.service.delivery.web.dto.response.DeliveryResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.time.ZonedDateTime;
+
 @Mapper(componentModel = "spring")
 public interface WebDeliveryMapper {
     WebDeliveryMapper INSTANCE = Mappers.getMapper(WebDeliveryMapper.class);
@@ -24,9 +26,14 @@ public interface WebDeliveryMapper {
             throw new InvalidDeliveryModeException("Invalid delivery mode: " + request.mode());
         }
 
-
-        return new Delivery(null, mode, request.deliveryDate());
+        ZonedDateTime deliveryDate = ZonedDateTime.parse(request.deliveryDate());
+        return new Delivery(null, mode, deliveryDate);
     }
 
-    DeliveryResponse toResponse(Delivery delivery);
+    default DeliveryResponse toResponse(Delivery delivery){
+        if (delivery == null) {
+            return null;
+        }
+        return new DeliveryResponse(delivery.getId(), delivery.getMode(), delivery.getDeliveryDate());
+    }
 }

@@ -2,6 +2,7 @@ package com.service.delivery.web.controller;
 
 import com.service.delivery.application.exception.delivery.DeliveryNotFoundException;
 import com.service.delivery.application.exception.delivery.InvalidDeliveryException;
+import com.service.delivery.application.exception.delivery.NullDeliveryException;
 import com.service.delivery.domain.exception.delivery.InvalidDeliveryDateException;
 import com.service.delivery.domain.exception.delivery.InvalidDeliveryModeException;
 import com.service.delivery.web.dto.response.ApiErrorResponse;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +36,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidDeliveryDateException.class)
     public ResponseEntity<ApiErrorResponse> handleInvalidDeliveryDate(InvalidDeliveryDateException ex) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidUUID(MethodArgumentTypeMismatchException ex) {
+        String paramName = ex.getName();
+        String message = "Invalid format for parameter '" + paramName + "'. Expected a valid UUID.";
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(NullDeliveryException.class)
+    public ResponseEntity<ApiErrorResponse> handleNullDelivery(NullDeliveryException ex) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
